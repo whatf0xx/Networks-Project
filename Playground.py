@@ -42,6 +42,13 @@ nx.write_graphml(G, f"./ER_{n}_{p}.graphml")
 
 import random
 
-G = nx.barabasi_albert_graph(10000, 3)
+G = nx.barabasi_albert_graph(1000, 3)
 
 nx.write_graphml(G, f"built-in_BA.graphml")
+
+#%%
+
+import Functions as fn
+
+G = fn.seed(4)
+nx.draw(G)
