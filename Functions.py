@@ -13,7 +13,7 @@ import random
 Returns a complete graph with m+1 nodes.
 """
 
-def seed(m):
+def seed(m: int):
     return nx.complete_graph(m+1)
 
 """
@@ -29,9 +29,9 @@ of 0s, which will corrupt how the code runs if they are left in the sliced
 bin, while it is being used to calculate the preferential attachment.
 """
 
-def make_list(N, m):
+def make_list(N: int, m: int):
     length = m*(m+1) + 2*m*(N-m-1)
-    node_list = np.zeros(length)
+    node_list = np.zeros(length, dtype=np.uint16)
     for i in range(m+1):
         for j in range(m):
             node_list[i*(m)+j] = i
@@ -85,8 +85,72 @@ def gen_BA(m, N, dist=False):
         BA_step(G, degree_bin, m, t)
         
     if dist:
-        int_bin = [int(d) for d in degree_bin]
-        d = np.bincount(int_bin)
+        d = np.bincount(degree_bin)
         return G, d
         
     return G
+
+"""
+Same as above, but with some breaks in to output useful data to test the
+algorithm is running correctly.
+"""
+
+def test_BA(m, N):
+    
+    G = seed(m)
+    degree_bin = make_list(N, m)
+    
+    nodes = []                      #the number of nodes the graph has
+    edges = []                      #the number of edges the graph has
+    k_predict = []                  #calculated degree of picked nodes
+    k_meas = []                     #actual average degree of picked nodes
+    
+    nodes.append(len(G.nodes))
+    edges.append(len(G.edges))
+
+    for t in range(N-m-1):
+        used_posns = m*(m+1) + 2*m*t
+        trimmed_bin = degree_bin[:used_posns].copy()
+        d = np.bincount(trimmed_bin)
+        k_squared = np.sum([k**2 for k in d])
+        k_predict.append(k_squared/(2*len(G.edges)))
+        lucky_nodes = BA_test_step(G, degree_bin, m, t)
+        t = list(trimmed_bin)
+        lucky_degrees = [t.count(l) for l in lucky_nodes]
+        k_meas.append(np.mean(lucky_degrees))
+        nodes.append(len(G.nodes))
+        edges.append(len(G.edges))
+        
+    return nodes, edges, k_predict, k_meas
+
+"""
+Another slightly modified function to lend itself to being used for testing.
+"""
+
+def BA_test_step(G, degree_bin, m, t):
+    new_node = m+t+1 #new node is the (m+t+1)th, starting from t=0
+    used_posns = m*(m+1) + 2*m*t
+    G.add_node(new_node) 
+    
+    # bin_positions = [random.randint(0, used_posns) for i in range(m)]
+    # #this step seems to do what it should for t=0
+    
+    # lucky_nodes = [int(degree_bin[b]) for b in bin_positions]
+    # print(f"bin positions: {bin_positions}")
+    # print(f"corresponding nodes: {lucky_nodes}")
+    lucky_nodes = []
+    trimmed_bin = degree_bin[:used_posns].copy()
+    
+    for i in range(m):
+        node = random.choice(trimmed_bin)
+        lucky_nodes.append(node)
+        trimmed_bin = trimmed_bin[trimmed_bin != node]
+    
+    for i, l in enumerate(lucky_nodes):
+        G.add_edge(new_node, l) #add edges to the lucky nodes
+        degree_bin[used_posns + i] = l
+        
+    for i in range(m):
+        degree_bin[used_posns + m + i] = new_node
+        
+    return lucky_nodes

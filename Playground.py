@@ -44,7 +44,7 @@ import random
 
 G = nx.barabasi_albert_graph(1000, 3)
 
-nx.write_graphml(G, f"built-in_BA.graphml")
+nx.write_graphml(G, "built-in_BA.graphml")
 
 #%%
 
