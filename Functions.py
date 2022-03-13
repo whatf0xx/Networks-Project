@@ -102,6 +102,7 @@ def test_BA(m, N):
     
     nodes = []                      #the number of nodes the graph has
     edges = []                      #the number of edges the graph has
+    norm = []
     k_predict = []                  #calculated degree of picked nodes
     k_meas = []                     #actual average degree of picked nodes
     
@@ -112,6 +113,7 @@ def test_BA(m, N):
         used_posns = m*(m+1) + 2*m*t
         trimmed_bin = degree_bin[:used_posns].copy()
         d = np.bincount(trimmed_bin)
+        norm.append(np.sum([k for k in d])/(2*len(G.edges)))
         k_squared = np.sum([k**2 for k in d])
         k_predict.append(k_squared/(2*len(G.edges)))
         lucky_nodes = BA_test_step(G, degree_bin, m, t)
@@ -121,7 +123,7 @@ def test_BA(m, N):
         nodes.append(len(G.nodes))
         edges.append(len(G.edges))
         
-    return nodes, edges, k_predict, k_meas
+    return nodes, edges, norm, k_predict, k_meas
 
 """
 Another slightly modified function to lend itself to being used for testing.
@@ -154,3 +156,22 @@ def BA_test_step(G, degree_bin, m, t):
         degree_bin[used_posns + m + i] = new_node
         
     return lucky_nodes
+
+"""
+A test for the BA model based on the average degree at each time step.
+"""
+
+def test2_BA(m, N):
+    
+    mu_k = []
+    G = seed(m)
+    degree_bin = make_list(N, m)
+
+    for t in range(N-m-1):
+        used_posns = m*(m+1) + 2*m*t
+        trimmed_bin = degree_bin[:used_posns].copy()
+        degrees = np.bincount(trimmed_bin)
+        mu_k.append(np.mean(degrees))
+        BA_step(G, degree_bin, m, t)
+    
+    return mu_k
