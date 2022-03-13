@@ -151,5 +151,5 @@ for e, D in enumerate(diffs):
     
     
 fig.text(0.5, 0.01, "Time", ha='center')
-fig.text(0.01, 0.5, "$\\langle k \\rangle / 2m$", va='center',
+fig.text(0.01, 0.5, "Deviation from theoretical value", va='center',
          rotation='vertical')
