@@ -91,6 +91,22 @@ def gen_BA(m, N, dist=False):
     return G
 
 """
+A neatly wrapped-up function to generate a BA graph with characteristic m and 
+size N. Only returns the degree distribution list
+"""
+
+def dist_BA(m, N, dist=False):
+    
+    G = seed(m)
+    degree_bin = make_list(N, m)
+
+    for t in range(N-m-1):
+        BA_step(G, degree_bin, m, t)
+        
+    d = np.bincount(degree_bin)
+    return d
+
+"""
 Same as above, but with some breaks in to output useful data to test the
 algorithm is running correctly.
 """
