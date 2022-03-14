@@ -1,3 +1,4 @@
 *.graphml
 *.pyc
 *.eps
+*.pkl
