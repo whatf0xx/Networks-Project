@@ -21,7 +21,7 @@ mod = importlib.import_module("logbin-2020")
 log_bins = []
 
 for r in raw:
-    log_bins.append(mod.logbin(r, 1.1))
+    log_bins.append(mod.logbin(r, 1.2))
 
 import matplotlib.pyplot as plt
 
