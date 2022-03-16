@@ -62,3 +62,32 @@ for i in range(2, 8):
         index=["Raw data", "Degree distribution"])
 
     Data.to_pickle(f"./BA_distributions{i}.pkl", compression=None)
+    
+#%%
+
+import Functions as fn
+import numpy as np
+
+m = [int(i) for i in np.logspace(2, 6, 5, base=2)]
+
+N = int(1e4) #smaller, average over more runs to get better statistics in tail.
+max_bin = np.sqrt(N) * 5 #probably an overestimate
+scale = 1.2 #should be good. go to 1.1 for more points, 1.3 for smoother curve
+
+from tqdm import tqdm
+import pandas as pd
+
+#Now, we are only interested in the log-binned data.
+
+import importlib
+mod = importlib.import_module("logbin-2020")
+
+full_dists = []
+dist_errs = []
+
+for i, mi in tqdm(m):
+    for e in range(100):
+        degrees = fn.dist_BA(mi, N)
+        bin_centres, vals = mod.logbin(degrees, scale, max_bin, zeros=True)
+        
+        

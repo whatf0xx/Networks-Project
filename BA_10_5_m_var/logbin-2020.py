@@ -14,7 +14,7 @@
 
 import numpy as np
 
-def logbin(data, scale = 1., max_bin=-1, zeros = False):
+def logbin(data, scale = 1., zeros = False):
     """
     logbin(data, scale = 1., zeros = False)
 
@@ -44,10 +44,6 @@ def logbin(data, scale = 1., max_bin=-1, zeros = False):
           Scale parameter controlling the growth of bin sizes.
           If scale = 1., function will return frequency of each unique integer
           value in data with no binning.
-          
-    max_bin: float. set the final bin edge manually, instead of taking it from
-            the data. Useful for averaging lots of logbins, but don't forget
-            to normalise afterwards! Leave as -1 in order to use smax instead.
 
     zeros: boolean
           Set zeros = True if you want binning function to consider events of
@@ -71,10 +67,7 @@ def logbin(data, scale = 1., max_bin=-1, zeros = False):
     tot = np.sum(count)
     smax = np.max(data)
     if scale > 1:
-        if max_bin == -1:
-            jmax = np.ceil(np.log(smax)/np.log(scale))
-        else:
-            jmax = np.ceil(np.log(max_bin)/np.log(scale))
+        jmax = np.ceil(np.log(smax)/np.log(scale))
         if zeros:
             binedges = scale ** np.arange(jmax + 1)
             binedges[0] = 0
@@ -93,11 +86,10 @@ def logbin(data, scale = 1., max_bin=-1, zeros = False):
     else:
         x = np.nonzero(count)[0]
         y = count[count != 0].astype('float')
-    if zeros != True and x[0] == 0:
-        x = x[1:]
-        y = y[1:]
-    if zeros != True:
-        x = x[y!=0]
-        y = y[y!=0]
+        if zeros != True and x[0] == 0:
+            x = x[1:]
+            y = y[1:]
     y /= tot
+    x = x[y!=0]
+    y = y[y!=0]
     return x,y
