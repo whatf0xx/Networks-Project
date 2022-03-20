@@ -14,7 +14,7 @@
 
 import numpy as np
 
-def logbin(data, scale = 1., max_bin=-1, zeros = False):
+def logbin(data, scale = 1., min_bin=1, max_bin=-1, zeros = False):
     """
     logbin(data, scale = 1., zeros = False)
 
@@ -44,6 +44,8 @@ def logbin(data, scale = 1., max_bin=-1, zeros = False):
           Scale parameter controlling the growth of bin sizes.
           If scale = 1., function will return frequency of each unique integer
           value in data with no binning.
+          
+    min_bin: float. The lowest bin edge to use.
           
     max_bin: float. set the final bin edge manually, instead of taking it from
             the data. Useful for averaging lots of logbins, but don't forget
@@ -76,10 +78,10 @@ def logbin(data, scale = 1., max_bin=-1, zeros = False):
         else:
             jmax = np.ceil(np.log(max_bin)/np.log(scale))
         if zeros:
-            binedges = scale ** np.arange(jmax + 1)
-            binedges[0] = 0
+            binedges = min_bin * scale ** np.arange(jmax + 1)
+            #binedges[0] = 0
         else:
-            binedges = scale ** np.arange(1,jmax + 1)
+            binedges = min_bin * scale ** np.arange(1,jmax + 1)
             # count = count[1:]
         binedges = np.unique(binedges.astype('uint64'))
         x = (binedges[:-1] * (binedges[1:]-1)) ** 0.5
