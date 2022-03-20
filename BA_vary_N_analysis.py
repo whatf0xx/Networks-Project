@@ -52,7 +52,7 @@ ax = plt.axes()
 ax.set_xscale("log")
 ax.set_yscale("log")
 
-for i, n in enumerate(N[:-1]):
+for i, n in enumerate(N):
 
     ax.errorbar(centres[i], val[i], yerr=err[i],
             color = colors[i], marker = '.', linewidth = 0,
@@ -75,7 +75,7 @@ ax = plt.axes()
 ax.set_xscale("log")
 ax.set_yscale("log")
 
-for i, n in enumerate(N[:-1]):
+for i, n in enumerate(N):
 
     ax.errorbar(centres[i]/np.sqrt(n),
                 val[i]*centres[i]*(centres[i]+1)*(centres[i]+2), 

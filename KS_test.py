@@ -19,8 +19,8 @@ import numpy as np
 data = Data[m]["Raw data"]
 normalisation = len(data)
 
-slice1 = 100
-slice2 = 350
+slice1 = 0
+slice2 = -1
 
 binned_data = np.bincount(data)[m:]/normalisation
 cdf = np.cumsum(binned_data)
@@ -56,11 +56,11 @@ diffs = abs(cdf-BA_CDF(points))
 loc = np.argmax(diffs)
 KS_result = max(abs(cdf-BA_CDF(points)))
 
-# from scipy.stats import kstest
+from scipy.stats import kstest
 
-# theory = BA_CDF(points)
+theory = BA_CDF(points)
 
-# sp_result = kstest(data, BA_CDF)
+sp_result = kstest(data, BA_CDF)
 
 def p_val(N, D):
     z = np.sqrt(N)*D

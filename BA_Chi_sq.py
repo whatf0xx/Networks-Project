@@ -9,7 +9,7 @@ import pandas as pd
 
 Data = pd.read_pickle("Raw_data_for_KS.pkl")
 
-m = 16
+m = 32
 
 def p_inf(k):
     return 2*m*(m+1)/k/(k+1)/(k+2)
@@ -58,25 +58,48 @@ print(chsq)
 
 #%% Do we get an improvement for log-binned data?
 
-scale = 1.1
-smax = np.max(data)
-jmax = jmax = np.ceil(np.log(smax)/np.log(scale))
-binedges = m*scale**(np.arange(jmax + 1))
-binedges = np.unique(binedges.astype('uint64'))
+scale = 1.08
+# smax = np.max(data)
+# jmax = jmax = np.ceil(np.log(smax)/np.log(scale))
+# binedges = m*scale**(np.arange(jmax + 1))
+# binedges = np.unique(binedges.astype('uint64'))
 
-x = (binedges[:-1] * (binedges[1:]-1)) ** 0.5
+# x = (binedges[:-1] * (binedges[1:]-1)) ** 0.5
 
-y = np.zeros_like(x)
-count = binned_data.copy()
-count = count.astype('float')
-for i in range(len(y)):
-    y[i] = np.sum(count[binedges[i]:binedges[i+1]]/(binedges[i+1] - binedges[i]))
+# y = np.zeros_like(x)
+# count = binned_data.copy()
+# count = count.astype('float')
+# for i in range(len(y)):
+#     y[i] = np.sum(count[binedges[i]:binedges[i+1]]/(binedges[i+1] - binedges[i]))
+#     #y[i] = np.sum(count[binedges[i]:binedges[i+1]])
     
-x = x[y!=0]
-y = y[y!=0]
+# x = x[y!=0]
+# y = y[y!=0]
+
+# plt.figure()
+# plt.plot(x, y, 'b.')
+# plt.plot(x, p_inf(x)*np.sum(y)/np.sum(p_inf(x)))
+# plt.xscale("log")
+# plt.yscale("log")
+
+#%% what about tims method
+
+import importlib
+mod = importlib.import_module("logbin2020Tim")
+
+tim, taem = mod.logbin(data, scale)
 
 plt.figure()
-plt.plot(x, y, 'b.')
-plt.plot(x, p_inf(x)*np.sum(y)/np.sum(p_inf(x)))
+plt.plot(tim, taem, 'b.')
+
+theory2 = p_inf(tim)
+theory2 *= np.sum(taem)/np.sum(theory2)
+
+plt.plot(tim, theory2)
 plt.xscale("log")
 plt.yscale("log")
+
+
+
+chsq = chisquare(taem, theory2)
+print(chsq)
