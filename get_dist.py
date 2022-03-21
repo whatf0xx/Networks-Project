@@ -72,7 +72,7 @@ m = [int(i) for i in np.logspace(1, 5, 5, base=2)]
 
 N = int(1e4) #smaller, average over more runs to get better statistics in tail.
 
-scale = 1.3 #should be good. go to 1.1 for more points, 1.3 for smoother curve
+scale = 1.1 #should be good. go to 1.1 for more points, 1.3 for smoother curve
 
 from tqdm import tqdm
 import pandas as pd
@@ -108,7 +108,7 @@ Data = pd.DataFrame(
         m, centres, full_dists, dist_errs)},
     index = ["Bin centres", "Log-binned data", "Associated errors"])
 
-Data.to_pickle("BA_10_4_av_vary_m.pkl")
+Data.to_pickle("BA_10_4_av_vary_m_d1.1.pkl")
 
 #%% raw data so we can do KS test
 

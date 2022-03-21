@@ -11,9 +11,9 @@ import numpy as np
 N = [int(n) for n in np.logspace(3, 5, 5)]
 m = 3 #nice and low
 
-av = 50
+av = 100
 
-scale = 1.3
+scale = 1.1
 
 centres = []
 mean = []
@@ -44,4 +44,4 @@ Data = pd.DataFrame(
     {n:(c,d,e) for (n,c,d,e) in zip(N, centres, mean, err)},
     index=["Bin centres", "Mean degree", "Error"])
 
-Data.to_pickle("BA_N_vary.pkl", compression=None)
+Data.to_pickle("BA_N_vary_d1.1.pkl", compression=None)

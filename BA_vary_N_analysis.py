@@ -7,7 +7,7 @@ Created on Sun Mar 20 14:59:23 2022
 
 import pandas as pd
 
-Data = pd.read_pickle("./BA_N_vary.pkl")
+Data = pd.read_pickle("./BA_N_vary_d1.1.pkl")
 m = 3
 
 import numpy as np
@@ -21,13 +21,14 @@ err =[]
 for n in N:
 
     v = Data[n]["Mean degree"]
+    print(len(v))
     c = Data[n]["Bin centres"]
     e = Data[n]["Error"]
     
     centres.append(c[v != 0])
     err.append(e[v != 0])
     val.append(v[v != 0])
-    
+    print(len(val[-1]))
 
 
 def p_inf(k):

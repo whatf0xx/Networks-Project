@@ -9,7 +9,7 @@ import pandas as pd
 
 Data = pd.read_pickle("Raw_data_for_KS.pkl")
 
-m = 32
+m = 4
 
 def p_inf(k):
     return 2*m*(m+1)/k/(k+1)/(k+2)
@@ -87,19 +87,46 @@ scale = 1.08
 import importlib
 mod = importlib.import_module("logbin2020Tim")
 
-tim, taem = mod.logbin(data, scale)
-
 plt.figure()
-plt.plot(tim, taem, 'b.')
 
-theory2 = p_inf(tim)
-theory2 *= np.sum(taem)/np.sum(theory2)
-
-plt.plot(tim, theory2)
 plt.xscale("log")
 plt.yscale("log")
 
+for m in [2, 4, 8, 16, 32]:
+    
+    data = Data[m]["Raw data"]
 
+    tim, taem = mod.logbin(data, scale)
 
-chsq = chisquare(taem, theory2)
-print(chsq)
+    theory2 = p_inf(tim)
+    theory2 *= np.sum(taem)/np.sum(theory2)
+
+    plt.plot(tim, taem, '.')
+    plt.plot(tim, theory2, color='#555555', linestyle='dashed')
+
+    chsq = chisquare(taem, theory2)
+    print(chsq)
+
+#%%
+
+# fig, ax = plt.subplots(1, 2, figsize=(5.0, 2.2))
+# ax[0].plot(points, binned_data, 'b.', markersize=2.6,
+#            label="linear binning")
+# ax[0].legend(handletextpad=0.05)
+# ax[1].plot(tim, taem, 'g.', markersize=2.6,
+#            label="log binning")
+# ax[1].legend(handletextpad=0.05)
+
+# ax[0].set_xscale("log")
+# ax[0].set_yscale("log")
+
+# ax[1].set_xscale("log")
+# ax[1].set_yscale("log")
+
+# fig.text(0.5, 0.01, "Degree distribution $k$", ha='center')
+# fig.text(0.005, 0.5, "Probability density $p_\\infty(k)$", va='center',
+#          rotation='vertical')
+
+# fig.tight_layout(pad=0.2, rect=(0.04,0.04,0.98,0.98))
+
+# fig.savefig("log-binning.eps")

@@ -9,7 +9,7 @@ import pandas as pd
 
 Data = pd.read_pickle("Raw_data_for_KS.pkl")
 
-m = 16
+m = 2
 
 def BA_CDF(k):
     return 1 - m*(m+1)/(k+1)/(k+2)
@@ -19,7 +19,7 @@ import numpy as np
 data = Data[m]["Raw data"]
 normalisation = len(data)
 
-slice1 = 0
+slice1 = 20
 slice2 = -1
 
 binned_data = np.bincount(data)[m:]/normalisation
