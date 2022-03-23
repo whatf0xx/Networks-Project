@@ -19,7 +19,7 @@ import numpy as np
 data = Data[m]["Raw data"]
 normalisation = len(data)
 
-slice1 = 20
+slice1 = 0
 slice2 = -1
 
 binned_data = np.bincount(data)[m:]/normalisation
@@ -73,3 +73,26 @@ def p_val(N, D):
 p = p_val(new_norm, KS_result)
 print(KS_result)
 print(p)
+
+#%%
+
+fig = plt.figure(figsize=(4.8,3.2))
+ax = plt.axes()
+
+ax.set_xscale("log")
+ax.set_yscale("log")
+
+plt.plot(points, cdf, 'b.', markersize=3.2, label="Numerical data")
+
+smooth_points = np.logspace(np.log10(m), np.log10(len(binned_data)+m), 1000)
+ax.plot(smooth_points, BA_CDF(smooth_points),
+        color="green", label="Theory")
+
+ax.set_xlabel("$k$")
+ax.set_ylabel("Cumulative distribution function")
+
+ax.legend()
+
+fig.tight_layout(rect=(0,-0.04,0.96,0.98))
+
+fig.savefig("cdf.eps")

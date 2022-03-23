@@ -191,3 +191,21 @@ def test2_BA(m, N):
         BA_step(G, degree_bin, m, t)
     
     return mu_k
+
+"""
+For finding the k1 behaviour as N varies
+"""
+
+def BA_k1(m, N):
+    
+    G = seed(m)
+    degree_bin = make_list(N, m)
+    
+    k1 = np.zeros(N-m-1)
+
+    for t in range(N-m-1):
+        BA_step(G, degree_bin, m, t)
+        used_posns = m*(m+1) + 2*m*t
+        k1[t] = np.max(np.bincount(degree_bin[:used_posns]))
+        
+    return k1
