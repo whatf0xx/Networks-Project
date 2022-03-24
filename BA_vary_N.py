@@ -8,10 +8,10 @@ Created on Wed Mar 16 15:24:00 2022
 import Functions as fn
 import numpy as np
 
-N = [int(n) for n in np.logspace(3, 5, 5)]
+N = [int(n) for n in np.logspace(3, 5, 7)]
 m = 3 #nice and low
 
-av = 100
+av = 200
 
 scale = 1.1
 
@@ -30,7 +30,7 @@ for n in N:
     for i in tqdm(range(av)):
         dist = fn.dist_BA(m, n)
         bin_centres, vals = mod.logbin(
-            dist, scale, m, 10*m*np.sqrt(n), zeros=True)
+            dist, scale, m, m**2*np.sqrt(n), zeros=True)
         
         degrees.append(vals)
         

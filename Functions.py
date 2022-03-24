@@ -31,7 +31,7 @@ bin, while it is being used to calculate the preferential attachment.
 
 def make_list(N: int, m: int):
     length = m*(m+1) + 2*m*(N-m-1)
-    node_list = np.zeros(length, dtype=np.uint16)
+    node_list = np.zeros(length, dtype=np.uint32)
     for i in range(m+1):
         for j in range(m):
             node_list[i*(m)+j] = i
