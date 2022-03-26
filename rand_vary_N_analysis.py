@@ -7,7 +7,7 @@ Created on Sun Mar 20 14:59:23 2022
 
 import pandas as pd
 
-Data = pd.read_pickle("./BA_N_vary_d1.1.pkl")
+Data = pd.read_pickle("./rand_vary_N.pkl")
 m = 3
 
 import numpy as np
@@ -20,9 +20,9 @@ err =[]
 
 for n in N:
 
-    v = Data[n]["Mean degree"]
+    v = Data[n]["Log-binned data"]
     c = Data[n]["Bin centres"]
-    e = Data[n]["Error"]
+    e = Data[n]["Associated errors"]
     
     centres.append(c[v != 0])
     err.append(e[v != 0])
@@ -66,7 +66,7 @@ ax.set_ylabel("Probability $p(k)$")
 
 ax.legend()
 
-fig.savefig("./BA_vary_N.eps")
+fig.savefig("./rand_vary_N.eps")
 
 #%%
 fig = plt.figure(figsize=(6.0, 4.4))
@@ -93,4 +93,4 @@ ax.legend()
 
 fig.tight_layout(rect=(-0.02,-0.04,0.98,0.98))
 
-fig.savefig("BA_data_collapse.eps")
+fig.savefig("rand_data_collapse.eps")

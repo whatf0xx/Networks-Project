@@ -209,3 +209,70 @@ def BA_k1(m, N):
         k1[t] = np.max(np.bincount(degree_bin[:used_posns]))
         
     return k1
+
+"""
+A step wherein you pick m random nodes from an initial graph to connect a new
+node to. No fancy list needed, just grab the current list of nodes, and pick
+m distinct elements from it. Random.sample() handles this nicely.
+    m - the number of connections to make.
+    G - the graph to start off of.
+"""
+
+def rand_step(m, G):
+    node_list = list(G.nodes())
+    t = len(node_list)
+    G.add_node(t+1)
+    
+    lucky_nodes = random.sample(node_list, m)
+    for l in lucky_nodes:
+        G.add_edge(t+1, l)
+        
+"""
+A neatly wrapped-up function to generate a random graph with characteristic m
+and size N. If dist == True, also returns the degree for each node.
+"""
+
+def gen_rand(m, N, dist=False):
+    
+    G = seed(m)
+
+    for t in range(N-m-1):
+        rand_step(m, G)
+        
+    if dist:
+        degrees = [val for (node, val) in G.degree()]
+        return G, degrees
+        
+    return G
+
+"""
+A neatly wrapped-up function to generate a random graph with characteristic m 
+and size N. Only returns the degree distribution list
+"""
+
+def dist_rand(m, N, dist=False):
+    
+    G = seed(m)
+
+    for t in range(N-m-1):
+        rand_step(m, G)
+        
+    degrees = [val for (node, val) in G.degree()]
+    return degrees
+
+"""
+For finding the k1 behaviour as N varies (random attachment)
+"""
+
+def rand_k1(m, N):
+    
+    G = seed(m)
+    
+    k1 = np.zeros(N-m-1)
+
+    for t in range(N-m-1):
+        rand_step(m, G)
+        degrees = [val for (node, val) in G.degree()]
+        k1[t] = np.max(degrees)
+        
+    return k1
