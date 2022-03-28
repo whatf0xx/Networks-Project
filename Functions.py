@@ -276,3 +276,56 @@ def rand_k1(m, N):
         k1[t] = np.max(degrees)
         
     return k1
+
+"""
+The dad mixed existing attachment. Do preferential first and then random, use
+random.sample() to pick nodes to be attached to and then for each generate a
+unique neighbour.
+"""
+
+def exist_step(G, degree_bin, r, t):
+    m = 2*r
+    node_list = list(G.nodes())
+    new_node = m+t+1 #new node is the (m+t+1)th, starting from t=0
+    used_posns = m*(m+1) + 2*m*t
+    G.add_node(new_node)
+    
+    lucky_nodes = []
+    trimmed_bin = degree_bin[:used_posns].copy()
+    
+    for i in range(r):
+        node = random.choice(trimmed_bin)
+        lucky_nodes.append(node)
+        trimmed_bin = trimmed_bin[trimmed_bin != node]
+    
+    for i, l in enumerate(lucky_nodes):
+        G.add_edge(new_node, l) #add edges to the lucky nodes
+        degree_bin[used_posns + i] = l
+        
+    for i in range(r):
+        degree_bin[used_posns + r + i] = new_node
+        
+    #now for the random attachment bit
+    lucky_nodes2 = random.sample(node_list, r)
+    for i, l in enumerate(lucky_nodes2):
+        nbs = list(set(node_list) & set(list(G.neighbors(l))))
+        nb = random.choice(nbs)
+        G.add_edge(l, nb)
+        degree_bin[used_posns + m + 2*i] = l
+        degree_bin[used_posns + m + 2*i+1] = nb
+        
+"""
+A neatly wrapped-up function to generate a exist graph with characteristic m 
+and size N. If dist == True, also returns the degree for each node.
+"""
+
+def gen_exist(r, N, dist=False):
+    m=2*r
+    G = seed(m)
+    degree_bin = make_list(N, m)
+
+    for t in range(N-m-1):
+        exist_step(G, degree_bin, r, t)
+        
+    d = np.bincount(degree_bin)
+    return d
